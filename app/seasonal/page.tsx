@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Anime, Season } from "../lib/types";
 import {
@@ -11,7 +11,7 @@ import {
 import AnimeGrid from "../components/AnimeGrid";
 import LoadingState from "../components/LoadingState";
 
-export default function SeasonalPage() {
+function SeasonalPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -293,5 +293,13 @@ export default function SeasonalPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function SeasonalPage() {
+  return (
+    <Suspense fallback={<LoadingState />}>
+      <SeasonalPageContent />
+    </Suspense>
   );
 }

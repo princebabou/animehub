@@ -1,4 +1,5 @@
 import {
+  Anime,
   AnimeResponse,
   GenreResponse,
   AnimeType,
@@ -23,7 +24,7 @@ export async function fetchTopAnime(
   return response.json();
 }
 
-export async function fetchAnimeById(id: number): Promise<{ data: any }> {
+export async function fetchAnimeById(id: number): Promise<{ data: Anime }> {
   const response = await fetch(`${API_BASE_URL}/anime/${id}`);
   await delay(1000);
   return response.json();
@@ -103,7 +104,7 @@ export async function fetchAnimeByGenre(
   return response.json();
 }
 
-export async function fetchRandomAnime(): Promise<{ data: any }> {
+export async function fetchRandomAnime(): Promise<{ data: Anime }> {
   const response = await fetch(`${API_BASE_URL}/random/anime`);
   await delay(1000);
   return response.json();

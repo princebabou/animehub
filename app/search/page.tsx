@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Anime } from "../lib/types";
 import { searchAnime } from "../lib/api";
 import AnimeGrid from "../components/AnimeGrid";
 import LoadingState from "../components/LoadingState";
 
-export default function SearchPage() {
+function SearchPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const query = searchParams.get("q") || "";
@@ -69,7 +69,7 @@ export default function SearchPage() {
       <div className="bg-gradient-to-r from-purple-100 to-indigo-100 dark:from-purple-900/20 dark:to-indigo-900/20 p-6 sm:p-10 rounded-2xl">
         <h1 className="text-3xl font-bold mb-4">Search Results</h1>
         <p className="text-gray-700 dark:text-gray-300">
-          Showing results for <span className="font-semibold">"{query}"</span>
+          Showing results for <span className="font-semibold">&quot;{query}&quot;</span>
         </p>
       </div>
 
@@ -140,5 +140,13 @@ export default function SearchPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<LoadingState />}>
+      <SearchPageContent />
+    </Suspense>
   );
 }

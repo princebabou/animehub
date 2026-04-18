@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Anime, Genre, AnimeType, AnimeStatus } from "../lib/types";
 import { fetchAnimeGenres, searchAnime, fetchAnimeByGenre } from "../lib/api";
 import AnimeGrid from "../components/AnimeGrid";
 import LoadingState from "../components/LoadingState";
 
-export default function DiscoverPage() {
+type AnimeSortOption = "score" | "popularity" | "rank" | "favorites";
+
+function DiscoverPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -30,8 +32,8 @@ export default function DiscoverPage() {
   const [selectedStatus, setSelectedStatus] = useState<AnimeStatus | "">(
     (searchParams.get("status") as AnimeStatus) || ""
   );
-  const [selectedSort, setSelectedSort] = useState(
-    searchParams.get("sort") || "score"
+  const [selectedSort, setSelectedSort] = useState<AnimeSortOption>(
+    (searchParams.get("sort") as AnimeSortOption) || "score"
   );
 
   // Load genres on initial render
@@ -63,7 +65,7 @@ export default function DiscoverPage() {
             searchQuery,
             selectedType || undefined,
             selectedStatus || undefined,
-            (selectedSort as any) || undefined,
+            selectedSort,
             currentPage
           );
         } else if (selectedGenre) {
@@ -74,7 +76,7 @@ export default function DiscoverPage() {
             "",
             selectedType || undefined,
             selectedStatus || undefined,
-            (selectedSort as any) || undefined,
+            selectedSort,
             currentPage
           );
         }
@@ -304,7 +306,7 @@ export default function DiscoverPage() {
             <div className="relative">
               <select
                 value={selectedSort}
-                onChange={(e) => setSelectedSort(e.target.value)}
+                onChange={(e) => setSelectedSort(e.target.value as AnimeSortOption)}
                 className="appearance-none w-full md:w-48 py-2 pl-4 pr-10 rounded-lg bg-white dark:bg-gray-800 border-transparent shadow-sm focus:ring-2 focus:ring-purple-500"
               >
                 <option value="score">Rating (High to Low)</option>
@@ -522,5 +524,13 @@ export default function DiscoverPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function DiscoverPage() {
+  return (
+    <Suspense fallback={<LoadingState />}>
+      <DiscoverPageContent />
+    </Suspense>
   );
 }

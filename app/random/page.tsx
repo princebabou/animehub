@@ -5,9 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { fetchRandomAnime } from "../lib/api";
 import LoadingState from "../components/LoadingState";
+import { Anime } from "../lib/types";
 
 export default function RandomAnimePage() {
-  const [anime, setAnime] = useState<any>(null);
+  const [anime, setAnime] = useState<Anime | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [animationClass, setAnimationClass] = useState("");
 
@@ -181,7 +182,7 @@ export default function RandomAnimePage() {
               )}
 
               <div className="flex flex-wrap gap-2 mt-4">
-                {anime.genres?.map((genre: any) => (
+                {anime.genres?.map((genre: Anime["genres"][number]) => (
                   <Link
                     key={genre.mal_id}
                     href={`/discover?genre=${genre.mal_id}`}
@@ -275,7 +276,7 @@ export default function RandomAnimePage() {
                 <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-5">
                   <h3 className="text-lg font-semibold mb-3">Studios</h3>
                   <div className="flex flex-wrap gap-2">
-                    {anime.studios.map((studio: any) => (
+                    {anime.studios.map((studio: Anime["studios"][number]) => (
                       <span
                         key={studio.mal_id}
                         className="px-3 py-1 rounded-lg bg-gray-100 dark:bg-gray-700"

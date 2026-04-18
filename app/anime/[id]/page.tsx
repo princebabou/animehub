@@ -28,9 +28,13 @@ async function getAnimeDetails(id: number) {
   }
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  // Make sure params is resolved before accessing id
-  const resolvedParams = params;
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  // Next.js 15 passes route params as a Promise in server components.
+  const resolvedParams = await params;
   const id = parseInt(resolvedParams.id);
   const anime = await getAnimeDetails(id);
 
@@ -53,10 +57,9 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 export default async function AnimePage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  // Make sure params is resolved before accessing id
-  const resolvedParams = params;
+  const resolvedParams = await params;
   const id = parseInt(resolvedParams.id);
   const anime = await getAnimeDetails(id);
 
